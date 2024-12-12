@@ -1,4 +1,4 @@
-#include "nBody.hpp"
+#include "../../include/nBody.hpp"
 
 class Nbody : public AbstractNbody<Particle> {
 public:
