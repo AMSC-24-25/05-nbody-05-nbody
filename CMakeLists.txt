@@ -9,6 +9,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 
 # Programming model selectable options. Default IF NOT CACHED: SERIAL. Use cached value otherwise.
 set(MODEL "SERIAL" CACHE STRING "Select the programming model: SERIAL, MPI, OPENMP")
+message(STATUS)
 message(STATUS "MODEL ... ${MODEL}")
 if (MODEL STREQUAL "SERIAL")
     message(STATUS "-- Using serial implementation")
@@ -38,7 +39,7 @@ message(STATUS)
 
 
 # Including own headers.
-include_directories(include, third_party)
+include_directories(include third_party)
 
 # Including source files.
 set(MAIN_FILE "src/main.cpp")
