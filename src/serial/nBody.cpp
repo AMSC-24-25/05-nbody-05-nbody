@@ -30,13 +30,11 @@ public:
             }
 
             for (unsigned int j = 0; j < this->N; j++) {
-                this->particles[j].pos[0] = this->particles[j].pos[0] + this->delta_t * this->particles[j].vel[0];
-                this->particles[j].pos[1] = this->particles[j].pos[1] + this->delta_t * this->particles[j].vel[1];
+                this->particles[j].pos[0] += this->delta_t * this->particles[j].vel[0];
+                this->particles[j].pos[1] += this->delta_t * this->particles[j].vel[1];
 
-                this->particles[j].vel[0] =
-                        this->particles[j].vel[0] + this->delta_t * this->forces_x[j] / this->particles[j].mass;
-                this->particles[j].vel[1] =
-                        this->particles[j].vel[1] + this->delta_t * this->forces_y[j] / this->particles[j].mass;
+                this->particles[j].vel[0] += this->delta_t * this->forces_x[j] / this->particles[j].mass;
+                this->particles[j].vel[1] += this->delta_t * this->forces_y[j] / this->particles[j].mass;
 
                 // output
             }
