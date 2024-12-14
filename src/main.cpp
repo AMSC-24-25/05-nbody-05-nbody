@@ -1,12 +1,9 @@
-#include <fstream>
-#include <iostream>
-#include <vector>
-
-#include "nBody.hpp"
+#include <n_body_2D.h>
 
 int main(int argc, char *argv[]) {
+    NBody2D<double> nbody;
 
-    AbstractNbody
+    nbody.setup("../data/input.json");
 
     return 0;
 }
