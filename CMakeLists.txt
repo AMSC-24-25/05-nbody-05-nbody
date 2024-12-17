@@ -42,7 +42,12 @@ message(STATUS)
 include_directories(include third_party)
 
 # Including source files.
-set(MAIN_FILE "src/main.cpp")
+set(MAIN_FILE "src/main.cpp"
+        include/integrator.hpp
+        include/euler_explicit_integrator.h
+        include/euler_implicit_integrator.h
+        include/n_body_nd.h
+        src/serial/n_body_nd.cpp)
 
 # Building executable.
 add_executable(nbody ${MAIN_FILE} ${SRC_FILES})

@@ -33,3 +33,6 @@
 
 # Output folder
 output
+
+# Build folder
+build/
