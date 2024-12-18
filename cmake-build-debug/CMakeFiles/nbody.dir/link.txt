@@ -1,1 +1,0 @@
-/usr/bin/c++  -Wall -g CMakeFiles/nbody.dir/src/main.cpp.o CMakeFiles/nbody.dir/src/serial/n_body_nd.cpp.o CMakeFiles/nbody.dir/src/serial/n_body_2D.cpp.o -o nbody 

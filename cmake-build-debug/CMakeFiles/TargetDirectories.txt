@@ -1,3 +1,0 @@
-/home/ecirillo/msc/amsc/hands_on/github/05-nbody-05-nbody/cmake-build-debug/CMakeFiles/nbody.dir
-/home/ecirillo/msc/amsc/hands_on/github/05-nbody-05-nbody/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/ecirillo/msc/amsc/hands_on/github/05-nbody-05-nbody/cmake-build-debug/CMakeFiles/rebuild_cache.dir

@@ -1,8 +1,0 @@
-/usr/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "Unix Makefiles" -S /home/ecirillo/msc/amsc/hands_on/github/05-nbody-05-nbody -B /home/ecirillo/msc/amsc/hands_on/github/05-nbody-05-nbody/cmake-build-debug
--- 
--- MODEL ... SERIAL
--- -- Using serial implementation
--- 
--- Configuring done
--- Generating done
--- Build files have been written to: /home/ecirillo/msc/amsc/hands_on/github/05-nbody-05-nbody/cmake-build-debug
