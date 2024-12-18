@@ -16,12 +16,17 @@ Hands-on for **_Advanced Methods for Scientific Computing_** course @ **Politecn
 
 ```shell
 foo@bar:~/path/to/05-nbody-05-nbody$ mkdir -p build
-foo@bar:~/path/to/05-nbody-05-nbody$ cd build
-foo@bar:~/path/to/05-nbody-05-nbody/build$ cmake -DMODEL={SERIAL|MPI|OPENMP} ..
-foo@bar:~/path/to/05-nbody-05-nbody/build$ make
+foo@bar:~/path/to/05-nbody-05-nbody$ cmake -Bbuild -DMODEL={SERIAL|MPI|OPENMP}
+foo@bar:~/path/to/05-nbody-05-nbody$ cmake --build build
 ```
 
 (MPI and OpenMP implementations not available)
+
+## ▶️ Execution
+```shell
+foo@bar:~/path/to/05-nbody-05-nbody$ ./build/nbody {input-filename} {problem-dimension}
+```
+Particles' snapshots will be dumped at `output` folder, with a `nbody-` prefix.
 
 ## 🌀 Visualization
 
