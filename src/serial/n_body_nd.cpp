@@ -1,1 +1,1 @@
-#include "../../include/n_body_nd.h"
+#include "n_body_nd.hpp"

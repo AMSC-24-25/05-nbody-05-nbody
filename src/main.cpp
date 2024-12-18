@@ -1,6 +1,6 @@
-#include "../include/n_body_nd.h"
-#include "../include/euler_explicit_integrator.h"
-#include "../include/euler_implicit_integrator.h"
+#include "../include/n_body_nd.hpp"
+#include "../include/euler_explicit_integrator.hpp"
+#include "../include/euler_implicit_integrator.hpp"
 #include "../third_party/json.hpp"
 #include <fstream>
 
