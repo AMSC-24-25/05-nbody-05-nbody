@@ -29,7 +29,7 @@ def animation_2d(snapshots, animation_interval, trajectory_length=20):
     # Computing velocity and min/max
     v_min, v_max = float('inf'), float('-inf')
     for snapshot in snapshots:
-        snapshot['v'] = np.sqrt(snapshot['vx'] ** 2 + snapshot['vy'] ** 2)
+        snapshot['v'] = np.sqrt(snapshot['v0'] ** 2 + snapshot['v1'] ** 2)
         v_min = min(v_min, snapshot['v'].min())
         v_max = max(v_max, snapshot['v'].max())
     # Normalization function matching velocity boundaries - later velocity-color mapping
@@ -39,8 +39,8 @@ def animation_2d(snapshots, animation_interval, trajectory_length=20):
     x_min, x_max = float('inf'), float('-inf')
     y_min, y_max = float('inf'), float('-inf')
     for snapshot in snapshots:
-        x_min, x_max = min(x_min, snapshot['x'].min()), max(x_max, snapshot['x'].max())
-        y_min, y_max = min(y_min, snapshot['y'].min()), max(y_max, snapshot['y'].max())
+        x_min, x_max = min(x_min, snapshot['x0'].min()), max(x_max, snapshot['x0'].max())
+        y_min, y_max = min(y_min, snapshot['x1'].min()), max(y_max, snapshot['x1'].max())
 
     # --- Plotting
     fig = plt.figure()
@@ -56,7 +56,7 @@ def animation_2d(snapshots, animation_interval, trajectory_length=20):
     trajectories = {i: ([], []) for i in range(len(snapshots[0]))}
 
     # Setting-up the scatter with initial snapshot state
-    scatter = ax.scatter(snapshots[0]['x'], snapshots[0]['y'],
+    scatter = ax.scatter(snapshots[0]['x0'], snapshots[0]['x1'],
                          c=snapshots[0]['v'],
                          cmap='plasma',
                          norm=norm,
@@ -69,27 +69,27 @@ def animation_2d(snapshots, animation_interval, trajectory_length=20):
         # Extracting position, mass and velocity norm
         time = snapshot['t'][0]
         mass = snapshot['m']
-        x, y = snapshot['x'], snapshot['y']
+        x, y = snapshot['x0'], snapshot['x1']
         velocity = snapshot['v']
 
         # Update the trajectories: store the current (x, y) positions for each point
-        for i in range(len(snapshot['x'])):
-            trajectories[i][0].append(snapshot['x'][i])
-            trajectories[i][1].append(snapshot['y'][i])
+        for i in range(len(snapshot['x0'])):
+            trajectories[i][0].append(snapshot['x0'][i])
+            trajectories[i][1].append(snapshot['x1'][i])
             # If the number of stored positions exceeds the trajectory length, remove the oldest
             if len(trajectories[i][0]) > trajectory_length:
                 trajectories[i][0].pop(0)
                 trajectories[i][1].pop(0)
 
         # Plot the trajectories: Add dotted lines for each point's trajectory
-        for i in range(len(snapshot['x'])):
+        for i in range(len(snapshot['x0'])):
             ax.plot(trajectories[i][0], trajectories[i][1],
                     color=plt.cm.plasma(norm(velocity[i])),
                     alpha=0.2,
                     linewidth=0.5)
 
         # Updating scatter plot
-        scatter.set_offsets([(row.x, row.y) for row in snapshot.itertuples(index=False)])
+        scatter.set_offsets([(row.x0, row.x1) for row in snapshot.itertuples(index=False)])
         # Setting point sizes based on mass
         scatter.set_sizes(mass * 10)
         # Mapping velocity to color
@@ -111,7 +111,7 @@ def animation_3d(snapshots, animation_interval, trajectory_length=20):
     # Computing velocity and min/max
     v_min, v_max = float('inf'), float('-inf')
     for snapshot in snapshots:
-        snapshot['v'] = np.sqrt(snapshot['vx'] ** 2 + snapshot['vy'] ** 2 + snapshot['vz'] ** 2)
+        snapshot['v'] = np.sqrt(snapshot['v0'] ** 2 + snapshot['v1'] ** 2 + snapshot['v2'] ** 2)
         v_min = min(v_min, snapshot['v'].min())
         v_max = max(v_max, snapshot['v'].max())
     # Normalization function matching velocity boundaries - later velocity-color mapping
@@ -122,9 +122,9 @@ def animation_3d(snapshots, animation_interval, trajectory_length=20):
     y_min, y_max = float('inf'), float('-inf')
     z_min, z_max = float('inf'), float('-inf')
     for snapshot in snapshots:
-        x_min, x_max = min(x_min, snapshot['x'].min()), max(x_max, snapshot['x'].max())
-        y_min, y_max = min(y_min, snapshot['y'].min()), max(y_max, snapshot['y'].max())
-        z_min, z_max = min(z_min, snapshot['z'].min()), max(z_max, snapshot['z'].max())
+        x_min, x_max = min(x_min, snapshot['v0'].min()), max(x_max, snapshot['v0'].max())
+        y_min, y_max = min(y_min, snapshot['v1'].min()), max(y_max, snapshot['v1'].max())
+        z_min, z_max = min(z_min, snapshot['v2'].min()), max(z_max, snapshot['v2'].max())
 
     # --- Plotting
     fig = plt.figure()
@@ -142,7 +142,7 @@ def animation_3d(snapshots, animation_interval, trajectory_length=20):
     trajectories = {i: ([], [], []) for i in range(len(snapshots[0]))}
 
     # Setting-up the scatter with initial snapshot state
-    scatter = ax.scatter(snapshots[0]['x'], snapshots[0]['y'], snapshots[0]['z'],
+    scatter = ax.scatter(snapshots[0]['x0'], snapshots[0]['x1'], snapshots[0]['x2'],
                          c=snapshots[0]['v'],
                          cmap='plasma',
                          norm=norm,
@@ -155,14 +155,14 @@ def animation_3d(snapshots, animation_interval, trajectory_length=20):
         # Extracting position, mass and velocity norm
         time = snapshot['t'][0]
         mass = snapshot['m']
-        x, y, z = snapshot['x'], snapshot['y'], snapshot['z']
+        x, y, z = snapshot['x0'], snapshot['x1'], snapshot['x2']
         velocity = snapshot['v']
 
         # Update the trajectories: store the current (x, y, z) positions for each point
-        for i in range(len(snapshot['x'])):
-            trajectories[i][0].append(snapshot['x'][i])
-            trajectories[i][1].append(snapshot['y'][i])
-            trajectories[i][2].append(snapshot['z'][i])
+        for i in range(len(snapshot['x0'])):
+            trajectories[i][0].append(snapshot['x0'][i])
+            trajectories[i][1].append(snapshot['x1'][i])
+            trajectories[i][2].append(snapshot['x2'][i])
             # If the number of stored positions exceeds the trajectory length, remove the oldest
             if len(trajectories[i][0]) > trajectory_length:
                 trajectories[i][0].pop(0)
@@ -170,7 +170,7 @@ def animation_3d(snapshots, animation_interval, trajectory_length=20):
                 trajectories[i][2].pop(0)
 
         # Plot the trajectories: Add dotted lines for each point's trajectory
-        for i in range(len(snapshot['x'])):
+        for i in range(len(snapshot['x0'])):
             ax.plot(trajectories[i][0], trajectories[i][1], trajectories[i][2],
                     color=plt.cm.plasma(norm(velocity[i])),
                     alpha=0.2,
@@ -200,7 +200,7 @@ def main(input_dir, input_filename_prefix, animation_interval):
         return
 
     snapshots = load_snapshots(nbody_filenames)
-    if 'z' in snapshots[0].columns:
+    if 'x2' in snapshots[0].columns:
         log.info("Interpreting the given files as a 3D problem.")
         animation_3d(snapshots, animation_interval)
     else:
