@@ -14,11 +14,14 @@ template<std::floating_point FP>
 class NBody2D : public AbstractNbody<FP> {
 public:
     explicit NBody2D(std::unique_ptr<Integrator<FP>> integrator)
-        : AbstractNbody<FP>(0, 0.0), integrator(std::move(integrator)) {}
+            : AbstractNbody<FP>(0, 0.0), integrator(std::move(integrator)) {}
 
     void setup(std::string file_name) override;
+
     void solve() override;
-    void output() override;
+
+protected:
+    void output(size_t step) override;
 
 private:
     std::unique_ptr<Integrator<FP>> integrator; // Integratore scelto
@@ -44,7 +47,7 @@ void NBody2D<FP>::setup(std::string file_name) {
 
     // Inizializza particelle
     this->particles.clear();
-    for (auto& p : data["particles"]) {
+    for (auto &p: data["particles"]) {
         FP mass = p["mass"];
         std::vector<FP> position = p["position"];
         std::vector<FP> velocity = p["velocity"];
@@ -63,13 +66,14 @@ void NBody2D<FP>::solve() {
     for (size_t step = 0; step < this->time.size(); ++step) {
         compute_forces();
         integrator->integrate(this->particles, forces, this->delta_t); // Passa le forze
+        output(step);
     }
 }
 
 // Metodo per calcolare le forze
 template<std::floating_point FP>
 void NBody2D<FP>::compute_forces() {
-    for (auto& force : forces) {
+    for (auto &force: forces) {
         std::fill(force.begin(), force.end(), 0.0);
     }
 
@@ -91,12 +95,31 @@ void NBody2D<FP>::compute_forces() {
 
 // Metodo output: Stampa i risultati
 template<std::floating_point FP>
-void NBody2D<FP>::output() {
-    std::cout << "Final positions of particles:\n";
-    for (const auto& particle : this->particles) {
-        std::cout << "Mass: " << particle.mass
-                  << ", Position: (" << particle.pos[0] << ", " << particle.pos[1] << ")\n";
+void NBody2D<FP>::output(size_t step) {
+    std::ostringstream timestep_filename_stream;
+    timestep_filename_stream << this->output_filename_prefix << std::setfill('0') << std::setw(5) << step << ".csv";
+    const std::string timestep_filename = timestep_filename_stream.str();
+
+    std::ofstream output_file(timestep_filename);
+    if (!output_file.is_open()) {
+        throw std::runtime_error("Error: Unable to open the output file!");
     }
+
+    std::cout << "Writing output to '" << timestep_filename << "'...\n";
+
+    // Scrive l'header dinamico
+    output_file << "t,x0,x1,v0,v1,m\n";
+
+    // Scrive i dati per ogni particella
+    for (const auto &particle: this->particles) {
+        output_file << this->time[step]; // Tempo
+        output_file << "," << particle.pos[0] << "," << particle.pos[1];
+        output_file << "," << particle.vel[0] << "," << particle.vel[1];
+        output_file << "," << particle.mass << "\n";
+    }
+
+    output_file.close();
+    std::cout << "Output written to '" << timestep_filename << "'\n";
 }
 
 #endif // TEAM_05_NBODY_NBODY_2D_HPP

@@ -4,7 +4,7 @@
 #include "../third_party/json.hpp"
 #include <fstream>
 
-double read_delta_t(const std::string& input_file) {
+double read_delta_t(const std::string &input_file) {
     std::ifstream input(input_file);
     if (!input.is_open()) {
         throw std::runtime_error("Error: Unable to open file " + input_file);
@@ -46,9 +46,8 @@ int main(int argc, char *argv[]) {
         // Setup, solve e output
         nbody.setup(input_file);
         nbody.solve();
-        nbody.output();
 
-    } catch (const std::exception& e) {
+    } catch (const std::exception &e) {
         std::cerr << "Error: " << e.what() << std::endl;
         return EXIT_FAILURE;
     }
