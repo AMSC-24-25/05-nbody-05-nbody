@@ -109,10 +109,10 @@ void NBody2D<FP>::compute_forces() {
             FP force_x = (AbstractNbody<FP>::G * this->particles[q].mass * this->particles[k].mass) / dist_cubed * dx;
             FP force_y = (AbstractNbody<FP>::G * this->particles[q].mass * this->particles[k].mass) / dist_cubed * dy;
 
-            forces[q][0] += force_x;
-            forces[q][1] += force_y;
-            forces[k][0] -= force_x;
-            forces[k][1] -= force_y;
+            forces[q][0] -= force_x;
+            forces[q][1] -= force_y;
+            forces[k][0] += force_x;
+            forces[k][1] += force_y;
         }
     }
 }
