@@ -6,7 +6,7 @@
 #include <cmath>
 #include <stdexcept>
 
-#define DEF_OUTPUT_FILENAME_PREFIX "./output/nbody-"
+#define DEF_OUTPUT_FILENAME_PREFIX "../output/nbody-"
 
 template<std::floating_point FP>
 struct Particle {
@@ -52,26 +52,12 @@ protected:
 
     unsigned int N = 0;
     FP delta_t = 0.0;
+    FP t_max = 0.0;
     std::vector<Particle<FP>> particles;
     std::vector<FP> time;
 
     std::string output_filename_prefix = DEF_OUTPUT_FILENAME_PREFIX;
 
-    // Utils
-    //Calcola la distanza tra particelle
-    FP distance(const Particle<FP> &a, const Particle<FP> &b) const {
-        FP sum = 0.0;
-        for (size_t i = 0; i < a.pos.size(); ++i) {
-            FP diff = a.pos[i] - b.pos[i];
-            sum += diff * diff;
-        }
-        return std::sqrt(sum);
-    }
-
-    //Resetta le forze a 0
-    void reset_forces(std::vector<FP> &forces) {
-        std::fill(forces.begin(), forces.end(), 0.0);
-    }
 };
 
 #endif //TEAM_05_NBODY_NBODY_H
