@@ -6,7 +6,7 @@
 #include <cmath>
 #include <stdexcept>
 
-#define DEF_OUTPUT_FILENAME_PREFIX "../output/nbody-"
+#define DEF_OUTPUT_FILENAME_PREFIX "./output/nbody-"
 
 template<std::floating_point FP>
 struct Particle {

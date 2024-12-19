@@ -9,12 +9,11 @@
 
 using json = nlohmann::json;
 
-template <std::floating_point FP>
-class NBody2D : public AbstractNbody<FP>
-{
+template<std::floating_point FP>
+class NBody2D : public AbstractNbody<FP> {
 public:
-    explicit NBody2D()
-        : AbstractNbody<FP>(0, 0.0) {}
+    NBody2D()
+            : AbstractNbody<FP>(0, 0.0) {}
 
     void setup(std::string file_name) override;
 
@@ -27,17 +26,17 @@ private:
     std::vector<std::vector<FP>> forces; // Forze dinamiche per ogni particella (x, y)
 
     void compute_forces();
+
     void euler_explicit();
+
     FP calculate_total_energy();
 };
 
 // Metodo setup: Lettura dei dati da file JSON
-template <std::floating_point FP>
-void NBody2D<FP>::setup(std::string file_name)
-{
+template<std::floating_point FP>
+void NBody2D<FP>::setup(std::string file_name) {
     std::ifstream input(file_name);
-    if (!input.is_open())
-    {
+    if (!input.is_open()) {
         throw std::runtime_error("Error: Unable to open file " + file_name);
     }
 
@@ -51,8 +50,7 @@ void NBody2D<FP>::setup(std::string file_name)
 
     // Inizializza particelle
     this->particles.clear();
-    for (auto &p : data["particles"])
-    {
+    for (auto &p: data["particles"]) {
         FP mass = p["mass"];
         std::vector<FP> position = p["position"];
         std::vector<FP> velocity = p["velocity"];
@@ -64,8 +62,7 @@ void NBody2D<FP>::setup(std::string file_name)
 
     // Inizializza tempo
     this->time.push_back(0.0);
-    for (FP t = this->delta_t; t <= this->t_max; t += this->delta_t)
-    {
+    for (FP t = this->delta_t; t <= this->t_max; t += this->delta_t) {
         this->time.push_back(t);
     }
 
@@ -73,41 +70,34 @@ void NBody2D<FP>::setup(std::string file_name)
 }
 
 // Metodo solve: Usa l'integratore
-template <std::floating_point FP>
-void NBody2D<FP>::solve()
-{
+template<std::floating_point FP>
+void NBody2D<FP>::solve() {
 
     FP initial_energy = calculate_total_energy();
 
-    for (size_t step = 0; step < this->time.size(); ++step)
-    {
+    for (size_t step = 0; step < this->time.size(); ++step) {
         compute_forces();
         euler_explicit();
-    
+
         FP current_energy = calculate_total_energy();
         FP relative_change = std::abs((current_energy - initial_energy) / initial_energy);
 
-        std::cout << "Step " << step << ": Energy = " << current_energy 
-          << ", Relative change = " << relative_change << std::endl;
-        std::cout << current_energy;
+        std::cout << "Step " << step << ": Energy = " << current_energy
+                  << ", Relative change = " << relative_change << std::endl;
 
         output(step);
     }
 }
 
 // Metodo per calcolare le forze
-template <std::floating_point FP>
-void NBody2D<FP>::compute_forces()
-{
-    for (auto &force : forces)
-    {
+template<std::floating_point FP>
+void NBody2D<FP>::compute_forces() {
+    for (auto &force: forces) {
         std::fill(force.begin(), force.end(), 0.0);
     }
 
-    for (size_t q = 0; q < this->N; ++q)
-    {
-        for (size_t k = q + 1; k < this->N; ++k)
-        {
+    for (size_t q = 0; q < this->N; ++q) {
+        for (size_t k = q + 1; k < this->N; ++k) {
 
             FP dx = this->particles[q].pos[0] - this->particles[k].pos[0];
             FP dy = this->particles[q].pos[1] - this->particles[k].pos[1];
@@ -128,11 +118,9 @@ void NBody2D<FP>::compute_forces()
 }
 
 // Metodo eulero esplicito
-template <std::floating_point FP>
-void NBody2D<FP>::euler_explicit()
-{
-    for (unsigned int j = 0; j < this->N; ++j)
-    {
+template<std::floating_point FP>
+void NBody2D<FP>::euler_explicit() {
+    for (unsigned int j = 0; j < this->N; ++j) {
         this->particles[j].pos[0] += this->delta_t * this->particles[j].vel[0];
         this->particles[j].pos[1] += this->delta_t * this->particles[j].vel[1];
 
@@ -141,25 +129,21 @@ void NBody2D<FP>::euler_explicit()
     }
 }
 
-template <std::floating_point FP>
-FP NBody2D<FP>::calculate_total_energy()
-{
+template<std::floating_point FP>
+FP NBody2D<FP>::calculate_total_energy() {
     FP kinetic_energy = 0;
     FP potential_energy = 0;
 
     // Energia cinetica
-    for (auto &particle : this->particles)
-    {
+    for (auto &particle: this->particles) {
         FP speed_squared = particle.vel[0] * particle.vel[0] + particle.vel[1] * particle.vel[1];
 
         kinetic_energy += 0.5 * particle.mass * speed_squared;
     }
 
     // Energia potenziale
-    for (size_t i = 0; i < this->N; ++i)
-    {
-        for (size_t j = i + 1; j < this->N; ++j)
-        {
+    for (size_t i = 0; i < this->N; ++i) {
+        for (size_t j = i + 1; j < this->N; ++j) {
             FP dx = this->particles[j].pos[0] - this->particles[i].pos[0];
             FP dy = this->particles[j].pos[1] - this->particles[i].pos[1];
             FP distance = std::sqrt(dx * dx + dy * dy);
@@ -173,16 +157,14 @@ FP NBody2D<FP>::calculate_total_energy()
 }
 
 // Metodo output: Stampa i risultati
-template <std::floating_point FP>
-void NBody2D<FP>::output(size_t step)
-{
+template<std::floating_point FP>
+void NBody2D<FP>::output(size_t step) {
     std::ostringstream timestep_filename_stream;
     timestep_filename_stream << this->output_filename_prefix << std::setfill('0') << std::setw(5) << step << ".csv";
     const std::string timestep_filename = timestep_filename_stream.str();
 
     std::ofstream output_file(timestep_filename);
-    if (!output_file.is_open())
-    {
+    if (!output_file.is_open()) {
         throw std::runtime_error("Error: Unable to open the output file!");
     }
 
@@ -192,8 +174,7 @@ void NBody2D<FP>::output(size_t step)
     output_file << "t,x0,x1,v0,v1,m\n";
 
     // Scrive i dati per ogni particella
-    for (const auto &particle : this->particles)
-    {
+    for (const auto &particle: this->particles) {
         output_file << this->time[step]; // Tempo
         output_file << "," << particle.pos[0] << "," << particle.pos[1];
         output_file << "," << particle.vel[0] << "," << particle.vel[1];
